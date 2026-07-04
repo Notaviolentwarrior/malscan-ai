@@ -9,3 +9,6 @@ target/
 *.war
 
 .DS_Store
+
+# Uploaded/quarantined files
+uploads/
