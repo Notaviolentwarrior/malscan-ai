@@ -1,8 +1,11 @@
 package com.malscan.api.service;
 
 import com.malscan.api.dto.FileUploadResponse;
+import com.malscan.api.exception.ApiException;
+import com.malscan.api.util.FileValidationUtil;
 import com.malscan.api.util.HashUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,23 +21,21 @@ public class FileStorageService {
     private final Path uploadDir;
 
     public FileStorageService(@Value("${app.upload-dir}") String uploadDir) {
-        this.uploadDir = Path.of(uploadDir);
+        this.uploadDir = Path.of(uploadDir).toAbsolutePath().normalize();
     }
 
     public FileUploadResponse storeFile(MultipartFile file) {
         try {
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("Uploaded file is empty");
-            }
-
             Files.createDirectories(uploadDir);
 
-            String originalFilename = file.getOriginalFilename() == null
-                    ? "unknown-file"
-                    : file.getOriginalFilename();
+            String safeOriginalFilename = FileValidationUtil.validateAndSanitize(file);
+            String storedFilename = UUID.randomUUID() + "-" + safeOriginalFilename;
 
-            String storedFilename = UUID.randomUUID() + "-" + originalFilename;
             Path targetPath = uploadDir.resolve(storedFilename).normalize();
+
+            if (!targetPath.startsWith(uploadDir)) {
+                throw new ApiException("Invalid file path detected", HttpStatus.BAD_REQUEST);
+            }
 
             String sha256;
             try (InputStream hashInputStream = file.getInputStream()) {
@@ -46,7 +47,7 @@ public class FileStorageService {
             }
 
             return new FileUploadResponse(
-                    originalFilename,
+                    safeOriginalFilename,
                     storedFilename,
                     file.getContentType(),
                     file.getSize(),
@@ -54,8 +55,10 @@ public class FileStorageService {
                     "File uploaded successfully and stored in quarantine"
             );
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to store uploaded file", e);
+        } catch (ApiException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new ApiException("Failed to store uploaded file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
