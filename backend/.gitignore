@@ -1,0 +1,14 @@
+target/
+*.log
+
+.idea/
+.vscode/
+
+*.class
+*.jar
+*.war
+
+.DS_Store
+
+# Uploaded/quarantined files
+uploads/
