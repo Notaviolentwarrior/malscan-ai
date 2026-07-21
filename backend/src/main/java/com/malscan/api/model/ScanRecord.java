@@ -17,7 +17,13 @@ public class ScanRecord {
     private long size;
     private String sha256;
     private String status;
+    private Double probability;
+    private String verdict;
+    private String modelName;
+    private String error;
+    private String duplicateOfScanId;
     private Instant uploadedAt;
+    private Instant analyzedAt;
 
     public ScanRecord() {
     }
@@ -29,7 +35,13 @@ public class ScanRecord {
             long size,
             String sha256,
             String status,
-            Instant uploadedAt
+            Instant uploadedAt,
+            Double probability,
+            String verdict,
+            String modelName,
+            String error,
+            String duplicateOfScanId,
+            Instant analyzedAt
     ) {
         this.originalFilename = originalFilename;
         this.storedFilename = storedFilename;
@@ -38,6 +50,12 @@ public class ScanRecord {
         this.sha256 = sha256;
         this.status = status;
         this.uploadedAt = uploadedAt;
+        this.probability = probability;
+        this.verdict = verdict;
+        this.modelName = modelName;
+        this.error = error;
+        this.duplicateOfScanId = duplicateOfScanId;
+        this.analyzedAt = analyzedAt;
     }
 
     public String getId() {
@@ -68,7 +86,59 @@ public class ScanRecord {
         return status;
     }
 
+    public Double getProbability() {
+        return probability;
+    }
+
+    public String getVerdict() {
+        return verdict;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public String getDuplicateOfScanId() {
+        return duplicateOfScanId;
+    }
+
     public Instant getUploadedAt() {
         return uploadedAt;
+    }
+
+    public Instant getAnalyzedAt() {
+        return analyzedAt;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setProbability(Double probability) {
+        this.probability = probability;
+    }
+
+    public void setVerdict(String verdict) {
+        this.verdict = verdict;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public void setDuplicateOfScanId(String duplicateOfScanId) {
+        this.duplicateOfScanId = duplicateOfScanId;
+    }
+
+    public void setAnalyzedAt(Instant analyzedAt) {
+        this.analyzedAt = analyzedAt;
     }
 }

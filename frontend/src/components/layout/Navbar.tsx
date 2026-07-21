@@ -1,31 +1,40 @@
-import { Bell, Search, UserCircle2 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
-  return (
-    <header className="flex h-16 items-center justify-between border-b border-slate-800 bg-slate-950 px-6">
-      <div>
-        <h2 className="text-2xl font-semibold text-white">
-          Dashboard
-        </h2>
-      </div>
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
+  const isScanDetails = location.pathname.startsWith("/scans/");
+  const title = isDashboard
+    ? "Dashboard"
+    : isScanDetails
+      ? "Scan Details"
+      : "Upload File";
+  const subtitle = isDashboard
+    ? "Recent MongoDB-backed scan results"
+    : isScanDetails
+      ? "Full metadata, verdict, and duplicate lineage"
+      : "PE-only static malware analysis";
 
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 rounded-xl bg-slate-900 px-3 py-2">
-          <Search size={18} className="text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent text-sm text-white placeholder:text-slate-500 outline-none"
-          />
+  return (
+    <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/45 backdrop-blur-xl">
+      <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8 xl:flex-row xl:items-center xl:justify-between">
+        <div>
+          <span className="section-kicker">MalScan Control Room</span>
+          <h2 className="mt-3 text-3xl font-semibold text-white">{title}</h2>
+          <p className="mt-2 text-sm text-slate-300">{subtitle}</p>
         </div>
 
-        <button className="rounded-xl bg-slate-900 p-2 hover:bg-slate-800">
-          <Bell size={20} className="text-slate-300" />
-        </button>
-
-        <button className="rounded-xl bg-slate-900 p-2 hover:bg-slate-800">
-          <UserCircle2 size={22} className="text-cyan-400" />
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <span className="status-pill border border-cyan-400/20 bg-cyan-500/10 text-cyan-200">
+            .exe / .dll only
+          </span>
+          <span className="status-pill border border-emerald-400/20 bg-emerald-500/10 text-emerald-200">
+            Never execute
+          </span>
+          <span className="status-pill border border-slate-700 bg-slate-900/80 text-slate-300">
+            MongoDB-backed
+          </span>
+        </div>
       </div>
     </header>
   );

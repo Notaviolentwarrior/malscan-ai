@@ -2,22 +2,17 @@ package com.malscan.api.dto;
 
 import java.time.Instant;
 
-public record FileUploadResponse(
+public record ScanListItemResponse(
         String scanId,
         String originalFilename,
-        String storedFilename,
-        String contentType,
-        long size,
         String sha256,
         String status,
-        Double probability,
         String verdict,
+        Double probability,
         String modelName,
         String error,
-        boolean reusedExistingResult,
         String duplicateOfScanId,
         Instant uploadedAt,
-        Instant analyzedAt,
-        String message
+        Instant analyzedAt
 ) {
 }

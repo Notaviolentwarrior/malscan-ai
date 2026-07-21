@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -7,7 +7,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/malscan_ai
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/malscan_ai}
 
   servlet:
     multipart:
@@ -15,4 +15,8 @@ spring:
       max-request-size: 25MB
 
 app:
-  upload-dir: uploads/quarantine
+  upload-dir: ${APP_UPLOAD_DIR:uploads/quarantine}
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+  analyzer:
+    base-url: ${APP_ANALYZER_BASE_URL:http://localhost:8000}

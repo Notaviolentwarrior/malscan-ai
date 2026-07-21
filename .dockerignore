@@ -1,0 +1,7 @@
+.git
+.venv
+backend/target
+frontend/dist
+frontend/node_modules
+uploads
+analyzer/models

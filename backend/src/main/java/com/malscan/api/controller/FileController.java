@@ -17,8 +17,11 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile file) {
-        FileUploadResponse response = fileStorageService.storeFile(file);
+    public ResponseEntity<FileUploadResponse> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(name = "forceRescan", defaultValue = "false") boolean forceRescan
+    ) {
+        FileUploadResponse response = fileStorageService.storeFile(file, forceRescan);
         return ResponseEntity.ok(response);
     }
 }

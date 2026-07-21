@@ -7,5 +7,46 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  analyzer:
+    build:
+      context: ./analyzer
+    container_name: malscan-analyzer
+    environment:
+      ANALYZER_MODEL_DIR: /app/models
+      ANALYZER_UPLOAD_ROOT: /opt/malscan/uploads
+      ANALYZER_MODEL_FILENAME: EMBER2024_PE.model
+      ANALYZER_MALICIOUS_THRESHOLD: "0.5"
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads_data:/opt/malscan/uploads
+      - ./analyzer/models:/app/models
+
+  backend:
+    build:
+      context: ./backend
+    container_name: malscan-backend
+    depends_on:
+      - mongodb
+      - analyzer
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/malscan_ai
+      APP_ANALYZER_BASE_URL: http://analyzer:8000
+      APP_UPLOAD_DIR: /opt/malscan/uploads/quarantine
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads_data:/opt/malscan/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: malscan-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
 volumes:
   mongodb_data:
+  uploads_data:

@@ -10,7 +10,7 @@ import java.util.Set;
 public class FileValidationUtil {
 
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
-            "exe", "dll", "pdf", "docx", "apk", "jar", "zip", "bin", "txt", "xml"
+            "exe", "dll"
     );
 
     private FileValidationUtil() {
@@ -45,6 +45,10 @@ public class FileValidationUtil {
         }
 
         return cleanFilename;
+    }
+
+    public static boolean isSupportedPortableExecutable(String filename) {
+        return ALLOWED_EXTENSIONS.contains(getExtension(filename));
     }
 
     private static String getExtension(String filename) {
