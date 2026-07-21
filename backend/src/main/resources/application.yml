@@ -5,6 +5,10 @@ spring:
   application:
     name: malscan-backend
 
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/malscan_ai
+
   servlet:
     multipart:
       max-file-size: 25MB
